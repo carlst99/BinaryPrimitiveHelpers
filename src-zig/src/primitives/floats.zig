@@ -26,14 +26,24 @@ pub fn readF128(source: []const u8, endian: Endian) f128 {
     return @bitCast(value);
 }
 
-/// Writes a 16-bit floating-point number (half) in big endian form.
-pub fn writeF16BE(dest: []u8, value: u16) void {
-    integers.writeI16BE(dest, @bitCast(value));
+/// Writes a 16-bit floating-point number (half).
+pub fn writeF16(dest: []u8, value: f16, endian: Endian) void {
+    integers.writeI16(dest, @bitCast(value), endian);
 }
 
-/// Writes a 16-bit floating-point number (half) in little endian form.
-pub fn writeF16LE(dest: []u8, value: u16) void {
-    integers.writeI16LE(dest, @bitCast(value));
+/// Writes a 32-bit floating-point number (single).
+pub fn writeF32(dest: []u8, value: f32, endian: Endian) void {
+    integers.writeI32(dest, @bitCast(value), endian);
+}
+
+/// Writes a 64-bit floating-point number (double).
+pub fn writeF64(dest: []u8, value: f64, endian: Endian) void {
+    integers.writeI64(dest, @bitCast(value), endian);
+}
+
+/// Writes a 128-bit floating-point number (quad).
+pub fn writeF128(dest: []u8, value: f128, endian: Endian) void {
+    integers.writeI128(dest, @bitCast(value), endian);
 }
 
 test readF16 {
@@ -64,14 +74,54 @@ test readF128 {
     try std.testing.expectEqual(1, readF128(&data, .little));
 }
 
-test writeF16BE {
+test writeF16 {
+    var expected = [_]u8{ 0x3c, 0x00 };
     var data: [2]u8 = undefined;
-    writeF16BE(&data, 1);
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x01 }, &data);
+
+    writeF16(&data, 1, .big);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+
+    std.mem.reverse(u8, &expected);
+
+    writeF16(&data, 1, .little);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
 }
 
-test writeF16LE {
-    var data: [2]u8 = undefined;
-    writeF16LE(&data, 1);
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x01, 0x00 }, &data);
+test writeF32 {
+    var expected = [_]u8{ 0x42, 0xAA, 0x40, 0x00 };
+    var data: [4]u8 = undefined;
+
+    writeF32(&data, 85.125, .big);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+
+    std.mem.reverse(u8, &expected);
+
+    writeF32(&data, 85.125, .little);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+}
+
+test writeF64 {
+    var expected = [_]u8{ 0x40, 0x55, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    var data: [8]u8 = undefined;
+
+    writeF64(&data, 85.125, .big);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+
+    std.mem.reverse(u8, &expected);
+
+    writeF64(&data, 85.125, .little);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+}
+
+test writeF128 {
+    var expected = [_]u8{ 0x3f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    var data: [16]u8 = undefined;
+
+    writeF128(&data, 1, .big);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
+
+    std.mem.reverse(u8, &expected);
+
+    writeF128(&data, 1, .little);
+    try std.testing.expectEqualSlices(u8, &expected, &data);
 }

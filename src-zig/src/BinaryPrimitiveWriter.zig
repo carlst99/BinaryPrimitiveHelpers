@@ -1,5 +1,6 @@
 const integer_primitives = @import("primitives/integers.zig");
 const std = @import("std");
+const Endian = std.builtin.Endian;
 
 /// A sequential writer of primitives to binary data.
 /// This type does not perform explicit bounds checks.
@@ -41,21 +42,21 @@ pub fn writeBool(self: *BinaryPrimitiveWriter, value: bool) void {
     });
 }
 
-/// Writes an unsigned 16-bit integer in big endian form.
-pub fn writeU16BE(self: *BinaryPrimitiveWriter, value: u16) void {
-    integer_primitives.writeU16BE(self.buffer[self.offset..], value);
+/// Writes an unsigned 16-bit integer.
+pub fn writeU16(self: *BinaryPrimitiveWriter, value: u16, endian: Endian) void {
+    integer_primitives.writeU16(self.buffer[self.offset..], value, endian);
     self.offset += 2;
 }
 
-/// Writes an unsigned 24-bit integer in big endian form.
-pub fn writeU24BE(self: *BinaryPrimitiveWriter, value: u24) void {
-    integer_primitives.writeU24BE(self.buffer[self.offset..], value);
+/// Writes an unsigned 24-bit integer.
+pub fn writeU24(self: *BinaryPrimitiveWriter, value: u24, endian: Endian) void {
+    integer_primitives.writeU24(self.buffer[self.offset..], value, endian);
     self.offset += 3;
 }
 
-/// Writes an unsigned 32-bit integer in big endian form.
-pub fn writeU32BE(self: *BinaryPrimitiveWriter, value: u32) void {
-    integer_primitives.writeU32BE(self.buffer[self.offset..], value);
+/// Writes an unsigned 32-bit integer.
+pub fn writeU32(self: *BinaryPrimitiveWriter, value: u32, endian: Endian) void {
+    integer_primitives.writeU32(self.buffer[self.offset..], value, endian);
     self.offset += 4;
 }
 
@@ -93,34 +94,34 @@ test writeBool {
     try std.testing.expectEqual(1, data[1]);
 }
 
-test writeU16BE {
+test writeU16 {
     var data: [4]u8 = undefined;
     var writer = BinaryPrimitiveWriter.init(&data);
-    writer.writeU16BE(std.math.maxInt(u8));
-    writer.writeU16BE(std.math.maxInt(u16));
+    writer.writeU16(1, .big);
+    writer.writeU16(1, .little);
 
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0xFF }, data[0..2]);
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0xFF, 0xFF }, data[2..4]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x01 }, data[0..2]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x01, 0x00 }, data[2..4]);
 }
 
-test writeU24BE {
+test writeU24 {
     var data: [6]u8 = undefined;
     var writer = BinaryPrimitiveWriter.init(&data);
-    writer.writeU24BE(std.math.maxInt(u8));
-    writer.writeU24BE(std.math.maxInt(u24) - 1);
+    writer.writeU24(1, .big);
+    writer.writeU24(1, .little);
 
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x00, 0xFF }, data[0..3]);
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0xFF, 0xFF, 0xFE }, data[3..6]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x00, 0x01 }, data[0..3]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x01, 0x00, 0x00 }, data[3..6]);
 }
 
-test writeU32BE {
+test writeU32 {
     var data: [8]u8 = undefined;
     var writer = BinaryPrimitiveWriter.init(&data);
-    writer.writeU32BE(std.math.maxInt(u16) + 1);
-    writer.writeU32BE(std.math.maxInt(u32));
+    writer.writeU32(1, .big);
+    writer.writeU32(1, .little);
 
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x01, 0x00, 0x00 }, data[0..4]);
-    try std.testing.expectEqualSlices(u8, &[_]u8{ 0xFF, 0xFF, 0xFF, 0xFF }, data[4..8]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x00, 0x00, 0x00, 0x01 }, data[0..4]);
+    try std.testing.expectEqualSlices(u8, &[_]u8{ 0x01, 0x00, 0x00, 0x00 }, data[4..8]);
 }
 
 test writeBytes {
