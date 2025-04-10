@@ -21,14 +21,80 @@ pub fn init(slice: []const u8) BinaryPrimitiveReader {
 }
 
 /// Advances the offset of the reader by the given amount.
-pub fn advance(self: *BinaryPrimitiveReader, amount: usize) void {
+pub inline fn advance(self: *BinaryPrimitiveReader, amount: usize) void {
     self.offset += amount;
 }
 
-/// Reads a byte value
+/// Reads an unsigned 8-bit value
 pub fn readU8(self: *BinaryPrimitiveReader) u8 {
     self.offset += 1;
     return self.buffer[self.offset - 1];
+}
+
+// Reads a signed 8-bit integer.
+pub fn readI8(self: *BinaryPrimitiveReader) i8 {
+    self.offset += 1;
+    return @bitCast(self.buffer[self.offset - 1]);
+}
+
+/// Reads an unsigned 16-bit integer.
+pub fn readU16(self: *BinaryPrimitiveReader, endian: Endian) u16 {
+    self.offset += 2;
+    return integer_primitives.readU16(self.buffer[self.offset - 2 ..], endian);
+}
+
+/// Reads a signed 16-bit integer.
+pub fn readI16(self: *BinaryPrimitiveReader, endian: Endian) i16 {
+    self.offset += 2;
+    return integer_primitives.readI16(self.buffer[self.offset - 2 ..], endian);
+}
+
+/// Reads an unsigned 24-bit integer.
+pub fn readU24(self: *BinaryPrimitiveReader, endian: Endian) u24 {
+    self.offset += 3;
+    return integer_primitives.readU24(self.buffer[self.offset - 3 ..], endian);
+}
+
+/// Reads a signed 24-bit integer.
+pub fn readI24(self: *BinaryPrimitiveReader, endian: Endian) i24 {
+    self.offset += 3;
+    return integer_primitives.readI24(self.buffer[self.offset - 3 ..], endian);
+}
+
+/// Reads an unsigned 32-bit integer.
+pub fn readU32(self: *BinaryPrimitiveReader, endian: Endian) u32 {
+    self.offset += 4;
+    return integer_primitives.readU32(self.buffer[self.offset - 4 ..], endian);
+}
+
+/// Reads a signed 32-bit integer.
+pub fn readI32(self: *BinaryPrimitiveReader, endian: Endian) i32 {
+    self.offset += 4;
+    return integer_primitives.readI32(self.buffer[self.offset - 4 ..], endian);
+}
+
+/// Reads an unsigned 64-bit integer.
+pub fn readU64(self: *BinaryPrimitiveReader, endian: Endian) u64 {
+    self.offset += 8;
+    return integer_primitives.readU64(self.buffer[self.offset - 8 ..], endian);
+}
+
+/// Reads a signed 64-bit integer.
+pub fn readI64(self: *BinaryPrimitiveReader, endian: Endian) i64 {
+    self.offset += 8;
+    return integer_primitives.readI64(self.buffer[self.offset - 8 ..], endian);
+}
+
+/// Reads an unsigned 128-bit integer.
+pub fn readU128(self: *BinaryPrimitiveReader, endian: Endian) u128 {
+    self.offset += 16;
+    return integer_primitives.readU128(self.buffer[self.offset - 16 ..], endian);
+}
+
+/// Reads a signed 128-bit integer.
+pub fn readI128(self: *BinaryPrimitiveReader, endian: Endian) i128 {
+    self.offset += 16;
+    return integer_primitives.readI128(self.buffer[self.offset - 16 ..], endian);
 }
 
 /// Reads a boolean value. Zero is treated as false, One as true, and all other values as errors.
@@ -38,20 +104,6 @@ pub fn readBool(self: *BinaryPrimitiveReader) BinaryPrimitiveReaderError!bool {
         1 => true,
         else => BinaryPrimitiveReaderError.NonBooleanValue,
     };
-}
-
-/// Reads an unsigned 24-bit integer.
-pub fn readU24(self: *BinaryPrimitiveReader, endian: Endian) u24 {
-    const value = integer_primitives.readU24(self.buffer[self.offset..], endian);
-    self.offset += 3;
-    return value;
-}
-
-/// Reads an unsigned 32-bit integer.
-pub fn readU32(self: *BinaryPrimitiveReader, endian: Endian) u32 {
-    const value = integer_primitives.readU32(self.buffer[self.offset..], endian);
-    self.offset += 4;
-    return value;
 }
 
 /// Reads a null-terminated string, returning a slice over the underlying buffer.
@@ -99,13 +151,28 @@ test readU8 {
     try std.testing.expectEqual(0xFF, reader.readU8());
 }
 
-test readBool {
-    const data = [_]u8{ 0x0, 0x1, 0xFF };
+test readI8 {
+    const data = [_]u8{ 0x01, 0xFF };
     var reader = BinaryPrimitiveReader.init(&data);
 
-    try std.testing.expectEqual(false, reader.readBool());
-    try std.testing.expectEqual(true, reader.readBool());
-    try std.testing.expectError(BinaryPrimitiveReaderError.NonBooleanValue, reader.readBool());
+    try std.testing.expectEqual(1, reader.readI8());
+    try std.testing.expectEqual(-1, reader.readI8());
+}
+
+test readU16 {
+    const data = [_]u8{ 0x00, 0x01, 0x01, 0x00 };
+    var reader = BinaryPrimitiveReader.init(&data);
+
+    try std.testing.expectEqual(1, reader.readU16(.big));
+    try std.testing.expectEqual(1, reader.readU16(.little));
+}
+
+test readI16 {
+    const data = [_]u8{ 0xff, 0xfe, 0xfe, 0xff };
+    var reader = BinaryPrimitiveReader.init(&data);
+
+    try std.testing.expectEqual(-2, reader.readI16(.big));
+    try std.testing.expectEqual(-2, reader.readI16(.little));
 }
 
 test readU24 {
@@ -116,12 +183,77 @@ test readU24 {
     try std.testing.expectEqual(1, reader.readU24(.little));
 }
 
+test readI24 {
+    const data = [_]u8{ 0xff, 0xff, 0xfe, 0xfe, 0xff, 0xff };
+    var reader = BinaryPrimitiveReader.init(&data);
+
+    try std.testing.expectEqual(-2, reader.readI24(.big));
+    try std.testing.expectEqual(-2, reader.readI24(.little));
+}
+
 test readU32 {
     const data = [_]u8{ 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00 };
     var reader = BinaryPrimitiveReader.init(&data);
 
     try std.testing.expectEqual(1, reader.readU32(.big));
     try std.testing.expectEqual(1, reader.readU32(.little));
+}
+
+test readI32 {
+    const data = [_]u8{ 0xff, 0xff, 0xff, 0xfe, 0xfe, 0xff, 0xff, 0xff };
+    var reader = BinaryPrimitiveReader.init(&data);
+
+    try std.testing.expectEqual(-2, reader.readI32(.big));
+    try std.testing.expectEqual(-2, reader.readI32(.little));
+}
+
+test readU64 {
+    const data = [_]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+    var data2 = data ++ data;
+    std.mem.reverse(u8, data2[8..]);
+
+    var reader = BinaryPrimitiveReader.init(&data2);
+    try std.testing.expectEqual(1, reader.readU64(.big));
+    try std.testing.expectEqual(1, reader.readU64(.little));
+}
+
+test readI64 {
+    const data = [_]u8{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe };
+    var data2 = data ++ data;
+    std.mem.reverse(u8, data2[8..]);
+
+    var reader = BinaryPrimitiveReader.init(&data2);
+    try std.testing.expectEqual(-2, reader.readI64(.big));
+    try std.testing.expectEqual(-2, reader.readI64(.little));
+}
+
+test readU128 {
+    const data = [_]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+    var data2 = data ++ data;
+    std.mem.reverse(u8, data2[16..]);
+
+    var reader = BinaryPrimitiveReader.init(&data2);
+    try std.testing.expectEqual(1, reader.readU128(.big));
+    try std.testing.expectEqual(1, reader.readU128(.little));
+}
+
+test readI128 {
+    const data = [_]u8{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe };
+    var data2 = data ++ data;
+    std.mem.reverse(u8, data2[16..]);
+
+    var reader = BinaryPrimitiveReader.init(&data2);
+    try std.testing.expectEqual(-2, reader.readI128(.big));
+    try std.testing.expectEqual(-2, reader.readI128(.little));
+}
+
+test readBool {
+    const data = [_]u8{ 0x0, 0x1, 0xFF };
+    var reader = BinaryPrimitiveReader.init(&data);
+
+    try std.testing.expectEqual(false, reader.readBool());
+    try std.testing.expectEqual(true, reader.readBool());
+    try std.testing.expectError(BinaryPrimitiveReaderError.NonBooleanValue, reader.readBool());
 }
 
 test readStringNullTerminated {
