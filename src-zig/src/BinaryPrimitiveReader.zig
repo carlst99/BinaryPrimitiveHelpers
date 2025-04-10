@@ -1,5 +1,6 @@
 const integer_primitives = @import("primitives/integers.zig");
 const std = @import("std");
+const Endian = std.builtin.Endian;
 
 /// A sequential reader of primitives from binary data.
 /// This type does not perform explicit bounds checks.
@@ -39,16 +40,16 @@ pub fn readBool(self: *BinaryPrimitiveReader) BinaryPrimitiveReaderError!bool {
     };
 }
 
-/// Reads an unsigned 24-bit integer in big endian form.
-pub fn readU24BE(self: *BinaryPrimitiveReader) u24 {
-    const value = integer_primitives.readU24BE(self.buffer[self.offset..]);
+/// Reads an unsigned 24-bit integer.
+pub fn readU24(self: *BinaryPrimitiveReader, endian: Endian) u24 {
+    const value = integer_primitives.readU24(self.buffer[self.offset..], endian);
     self.offset += 3;
     return value;
 }
 
-/// Reads an unsigned 32-bit integer in big endian form.
-pub fn readU32BE(self: *BinaryPrimitiveReader) u32 {
-    const value = integer_primitives.readU32BE(self.buffer[self.offset..]);
+/// Reads an unsigned 32-bit integer.
+pub fn readU32(self: *BinaryPrimitiveReader, endian: Endian) u32 {
+    const value = integer_primitives.readU32(self.buffer[self.offset..], endian);
     self.offset += 4;
     return value;
 }
@@ -107,20 +108,20 @@ test readBool {
     try std.testing.expectError(BinaryPrimitiveReaderError.NonBooleanValue, reader.readBool());
 }
 
-test readU24BE {
-    const data = [_]u8{ 0x01, 0x00, 0x00, 0x01, 0x00, 0x63 };
+test readU24 {
+    const data = [_]u8{ 0x00, 0x00, 0x01, 0x01, 0x00, 0x00 };
     var reader = BinaryPrimitiveReader.init(&data);
 
-    try std.testing.expectEqual(std.math.maxInt(u16) + 1, reader.readU24BE());
-    try std.testing.expectEqual(std.math.maxInt(u16) + 100, reader.readU24BE());
+    try std.testing.expectEqual(1, reader.readU24(.big));
+    try std.testing.expectEqual(1, reader.readU24(.little));
 }
 
-test readU32BE {
-    const data = [_]u8{ 0x00, 0x01, 0x00, 0x00, 0xFF, 0xFF, 0xFF, 0xFF };
+test readU32 {
+    const data = [_]u8{ 0x00, 0x00, 0x00, 0x01, 0x01, 0x00, 0x00, 0x00 };
     var reader = BinaryPrimitiveReader.init(&data);
 
-    try std.testing.expectEqual(std.math.maxInt(u16) + 1, reader.readU32BE());
-    try std.testing.expectEqual(std.math.maxInt(u32), reader.readU32BE());
+    try std.testing.expectEqual(1, reader.readU32(.big));
+    try std.testing.expectEqual(1, reader.readU32(.little));
 }
 
 test readStringNullTerminated {
