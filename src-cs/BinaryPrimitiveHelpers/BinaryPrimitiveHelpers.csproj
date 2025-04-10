@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsAotCompatible>true</IsAotCompatible>
+        <Version>0.0.0</Version>
+    </PropertyGroup>
+
+    <!-- NuGet-related properties -->
+    <PropertyGroup>
+        <Description>A utility library for reading and writing primitive data in binary representation.</Description>
+        <Authors>Carl Stephens</Authors>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)nuget</PackageOutputPath>
+        <PackageProjectUrl>https://github.com/carlst99/BinaryPrimitiveHelpers</PackageProjectUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>binary binary-primitives</PackageTags>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/carlst99/BinaryPrimitiveHelpers</RepositoryUrl>
+    </PropertyGroup>
+
+    <!-- NuGet-related release properties -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <!-- Source-link setup -->
+    <PropertyGroup>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Include symbol files (*.pdb) in the built .nupkg. We prefer this to symbol packages as it's a small library (hence restore time minimal) -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+    <!-- Pack inclusions -->
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)../../README.md">
+            <Pack>True</Pack>
+            <PackagePath>.</PackagePath>
+        </None>
+    </ItemGroup>
+
+</Project>
