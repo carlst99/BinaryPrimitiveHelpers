@@ -37,6 +37,18 @@ pub fn readF64LE(source: []const u8) f64 {
     return @bitCast(value);
 }
 
+/// Reads a 128-bit floating-point number (quad) in big endian form.
+pub fn readF128BE(source: []const u8) f128 {
+    const value: i128 = integers.readI128BE(source);
+    return @bitCast(value);
+}
+
+/// Reads a 128-bit floating-point number (quad) in little endian form.
+pub fn readF128LE(source: []const u8) f128 {
+    const value: i128 = integers.readI128LE(source);
+    return @bitCast(value);
+}
+
 test readF16BE {
     const data = [_]u8{ 0x3c, 0x00 };
     try std.testing.expectEqual(1, readF16BE(&data));
@@ -65,4 +77,14 @@ test readF64BE {
 test readF64LE {
     const data = [_]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x55, 0x40 };
     try std.testing.expectEqual(85.125, readF64LE(&data));
+}
+
+test readF128BE {
+    const data = [_]u8{ 0x3f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    try std.testing.expectEqual(1, readF128BE(&data));
+}
+
+test readF128LE {
+    const data = [_]u8{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x3f };
+    try std.testing.expectEqual(1, readF128LE(&data));
 }

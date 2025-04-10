@@ -80,6 +80,26 @@ pub fn readI64LE(source: []const u8) i64 {
     return std.mem.readInt(i64, source[0..8], .little);
 }
 
+/// Reads an unsigned 128-bit integer in big endian form.
+pub fn readU128BE(source: []const u8) u128 {
+    return std.mem.readInt(u128, source[0..16], .big);
+}
+
+/// Reads an unsigned 128-bit integer in little endian form.
+pub fn readU128LE(source: []const u8) u128 {
+    return std.mem.readInt(u128, source[0..16], .little);
+}
+
+/// Reads a signed 128-bit integer in big endian form.
+pub fn readI128BE(source: []const u8) i128 {
+    return std.mem.readInt(i128, source[0..16], .big);
+}
+
+/// Reads a signed 128-bit integer in little endian form.
+pub fn readI128LE(source: []const u8) i128 {
+    return std.mem.readInt(i128, source[0..16], .little);
+}
+
 /// Writes an unsigned 16-bit integer in big endian form.
 pub fn writeU16BE(dest: []u8, value: u16) void {
     dest[0] = @truncate(value >> 8);
@@ -179,6 +199,26 @@ test readI64BE {
 test readI64LE {
     const data = [_]u8{ 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
     try std.testing.expectEqual(-2, readI64LE(&data));
+}
+
+test readU128BE {
+    const data = [_]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01 };
+    try std.testing.expectEqual(1, readU128BE(&data));
+}
+
+test readU128LE {
+    const data = [_]u8{ 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    try std.testing.expectEqual(1, readU128LE(&data));
+}
+
+test readI128BE {
+    const data = [_]u8{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe };
+    try std.testing.expectEqual(-2, readI128BE(&data));
+}
+
+test readI128LE {
+    const data = [_]u8{ 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+    try std.testing.expectEqual(-2, readI128LE(&data));
 }
 
 test writeU16BE {
