@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb", // Use with the 'CodeLLDB' extension
+            "request": "launch",
+            "name": "[Linux] Debug Test Binary",
+            "program": "${workspaceFolder}/zig-out/bin/test",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build" // See tasks.json
+        },
+        {
+            "type": "cppvsdbg", // Use with the C/C++ extension
+            "request": "launch",
+            "name": "[Win] Debug Test Binary",
+            "program": "${workspaceFolder}/zig-out/bin/test",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build" // See tasks.json
+        },
+        {
+            "type": "lldb", // Use with the 'CodeLLDB' extension
+            "request": "launch",
+            "name": "[Linux] Debug Root Binary",
+            "program": "${workspaceFolder}/zig-out/bin/root",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build" // See tasks.json
+        },
+        {
+            "type": "cppvsdbg", // Use with the C/C++ extension
+            "request": "launch",
+            "name": "[Win] Debug Root Binary",
+            "program": "${workspaceFolder}/zig-out/bin/root",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build" // See tasks.json
+        },
+    ]
+}
