@@ -3,46 +3,46 @@ const std = @import("std");
 const Endian = std.builtin.Endian;
 
 /// Reads a 16-bit floating-point number (half).
-pub fn readF16(source: []const u8, endian: Endian) f16 {
+pub inline fn readF16(source: []const u8, endian: Endian) f16 {
     const value: i16 = integers.readI16(source, endian);
     return @bitCast(value);
 }
 
 /// Reads a 32-bit floating-point number (single).
-pub fn readF32(source: []const u8, endian: Endian) f32 {
+pub inline fn readF32(source: []const u8, endian: Endian) f32 {
     const value: i32 = integers.readI32(source, endian);
     return @bitCast(value);
 }
 
 /// Reads a 64-bit floating-point number (double).
-pub fn readF64(source: []const u8, endian: Endian) f64 {
+pub inline fn readF64(source: []const u8, endian: Endian) f64 {
     const value: i64 = integers.readI64(source, endian);
     return @bitCast(value);
 }
 
 /// Reads a 128-bit floating-point number (quad).
-pub fn readF128(source: []const u8, endian: Endian) f128 {
+pub inline fn readF128(source: []const u8, endian: Endian) f128 {
     const value: i128 = integers.readI128(source, endian);
     return @bitCast(value);
 }
 
 /// Writes a 16-bit floating-point number (half).
-pub fn writeF16(dest: []u8, value: f16, endian: Endian) void {
+pub inline fn writeF16(dest: []u8, value: f16, endian: Endian) void {
     integers.writeI16(dest, @bitCast(value), endian);
 }
 
 /// Writes a 32-bit floating-point number (single).
-pub fn writeF32(dest: []u8, value: f32, endian: Endian) void {
+pub inline fn writeF32(dest: []u8, value: f32, endian: Endian) void {
     integers.writeI32(dest, @bitCast(value), endian);
 }
 
 /// Writes a 64-bit floating-point number (double).
-pub fn writeF64(dest: []u8, value: f64, endian: Endian) void {
+pub inline fn writeF64(dest: []u8, value: f64, endian: Endian) void {
     integers.writeI64(dest, @bitCast(value), endian);
 }
 
 /// Writes a 128-bit floating-point number (quad).
-pub fn writeF128(dest: []u8, value: f128, endian: Endian) void {
+pub inline fn writeF128(dest: []u8, value: f128, endian: Endian) void {
     integers.writeI128(dest, @bitCast(value), endian);
 }
 

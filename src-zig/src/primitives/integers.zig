@@ -2,102 +2,102 @@ const std = @import("std");
 const Endian = std.builtin.Endian;
 
 /// Reads an unsigned 16-bit integer.
-pub fn readU16(source: []const u8, endian: Endian) u16 {
+pub inline fn readU16(source: []const u8, endian: Endian) u16 {
     return std.mem.readInt(u16, source[0..2], endian);
 }
 
 /// Reads a signed 16-bit integer.
-pub fn readI16(source: []const u8, endian: Endian) i16 {
+pub inline fn readI16(source: []const u8, endian: Endian) i16 {
     return std.mem.readInt(i16, source[0..2], endian);
 }
 
 /// Reads an unsigned 24-bit integer.
-pub fn readU24(source: []const u8, endian: Endian) u24 {
+pub inline fn readU24(source: []const u8, endian: Endian) u24 {
     return std.mem.readInt(u24, source[0..3], endian);
 }
 
 /// Reads a signed 24-bit integer.
-pub fn readI24(source: []const u8, endian: Endian) i24 {
+pub inline fn readI24(source: []const u8, endian: Endian) i24 {
     return std.mem.readInt(i24, source[0..3], endian);
 }
 
 /// Reads an unsigned 32-bit integer.
-pub fn readU32(source: []const u8, endian: Endian) u32 {
+pub inline fn readU32(source: []const u8, endian: Endian) u32 {
     return std.mem.readInt(u32, source[0..4], endian);
 }
 
 /// Reads a signed 32-bit integer.
-pub fn readI32(source: []const u8, endian: Endian) i32 {
+pub inline fn readI32(source: []const u8, endian: Endian) i32 {
     return std.mem.readInt(i32, source[0..4], endian);
 }
 
 /// Reads an unsigned 64-bit integer.
-pub fn readU64(source: []const u8, endian: Endian) u64 {
+pub inline fn readU64(source: []const u8, endian: Endian) u64 {
     return std.mem.readInt(u64, source[0..8], endian);
 }
 
 /// Reads a signed 64-bit integer.
-pub fn readI64(source: []const u8, endian: Endian) i64 {
+pub inline fn readI64(source: []const u8, endian: Endian) i64 {
     return std.mem.readInt(i64, source[0..8], endian);
 }
 
 /// Reads an unsigned 128-bit integer.
-pub fn readU128(source: []const u8, endian: Endian) u128 {
+pub inline fn readU128(source: []const u8, endian: Endian) u128 {
     return std.mem.readInt(u128, source[0..16], endian);
 }
 
 /// Reads a signed 128-bit integer.
-pub fn readI128(source: []const u8, endian: Endian) i128 {
+pub inline fn readI128(source: []const u8, endian: Endian) i128 {
     return std.mem.readInt(i128, source[0..16], endian);
 }
 
 /// Writes an unsigned 16-bit integer.
-pub fn writeU16(dest: []u8, value: u16, endian: Endian) void {
+pub inline fn writeU16(dest: []u8, value: u16, endian: Endian) void {
     std.mem.writeInt(u16, dest[0..2], value, endian);
 }
 
 /// Writes a signed 16-bit integer.
-pub fn writeI16(dest: []u8, value: i16, endian: Endian) void {
+pub inline fn writeI16(dest: []u8, value: i16, endian: Endian) void {
     std.mem.writeInt(i16, dest[0..2], value, endian);
 }
 
 /// Writes an unsigned 24-bit integer.
-pub fn writeU24(dest: []u8, value: u24, endian: Endian) void {
+pub inline fn writeU24(dest: []u8, value: u24, endian: Endian) void {
     std.mem.writeInt(u24, dest[0..3], value, endian);
 }
 
 /// Writes a signed 24-bit integer.
-pub fn writeI24(dest: []u8, value: i24, endian: Endian) void {
+pub inline fn writeI24(dest: []u8, value: i24, endian: Endian) void {
     std.mem.writeInt(i24, dest[0..3], value, endian);
 }
 
 /// Writes an unsigned 32-bit integer.
-pub fn writeU32(dest: []u8, value: u32, endian: Endian) void {
+pub inline fn writeU32(dest: []u8, value: u32, endian: Endian) void {
     std.mem.writeInt(u32, dest[0..4], value, endian);
 }
 
 /// Writes a signed 32-bit integer.
-pub fn writeI32(dest: []u8, value: i32, endian: Endian) void {
+pub inline fn writeI32(dest: []u8, value: i32, endian: Endian) void {
     std.mem.writeInt(i32, dest[0..4], value, endian);
 }
 
 /// Writes an unsigned 64-bit integer.
-pub fn writeU64(dest: []u8, value: u64, endian: Endian) void {
+pub inline fn writeU64(dest: []u8, value: u64, endian: Endian) void {
     std.mem.writeInt(u64, dest[0..8], value, endian);
 }
 
 /// Writes a signed 64-bit integer.
-pub fn writeI64(dest: []u8, value: i64, endian: Endian) void {
+pub inline fn writeI64(dest: []u8, value: i64, endian: Endian) void {
     std.mem.writeInt(i64, dest[0..8], value, endian);
 }
 
 /// Writes an unsigned 128-bit integer.
-pub fn writeU128(dest: []u8, value: u128, endian: Endian) void {
+pub inline fn writeU128(dest: []u8, value: u128, endian: Endian) void {
     std.mem.writeInt(u128, dest[0..16], value, endian);
 }
 
 /// Writes a signed 128-bit integer.
-pub fn writeI128(dest: []u8, value: i128, endian: Endian) void {
+pub inline fn writeI128(dest: []u8, value: i128, endian: Endian) void {
     std.mem.writeInt(i128, dest[0..16], value, endian);
 }
 
