@@ -80,42 +80,6 @@ pub fn readI64LE(source: []const u8) i64 {
     return std.mem.readInt(i64, source[0..8], .little);
 }
 
-/// Reads a 16-bit floating-point number (half) in big endian form.
-pub fn readF16BE(source: []const u8) f16 {
-    const value: i16 = readI16BE(source);
-    return @bitCast(value);
-}
-
-/// Reads a 16-bit floating-point number (half) in little endian form.
-pub fn readF16LE(source: []const u8) f16 {
-    const value: i16 = readI16LE(source);
-    return @bitCast(value);
-}
-
-/// Reads a 32-bit floating-point number (single) in big endian form.
-pub fn readF32BE(source: []const u8) f32 {
-    const value: i32 = readI32BE(source);
-    return @bitCast(value);
-}
-
-/// Reads a 32-bit floating-point number (single) in little endian form.
-pub fn readF32LE(source: []const u8) f32 {
-    const value: i32 = readI32LE(source);
-    return @bitCast(value);
-}
-
-/// Reads a 64-bit floating-point number (double) in big endian form.
-pub fn readF64BE(source: []const u8) f64 {
-    const value: i64 = readI64BE(source);
-    return @bitCast(value);
-}
-
-/// Reads a 64-bit floating-point number (double) in little endian form.
-pub fn readF64LE(source: []const u8) f64 {
-    const value: i64 = readI64LE(source);
-    return @bitCast(value);
-}
-
 /// Writes an unsigned 16-bit integer in big endian form.
 pub fn writeU16BE(dest: []u8, value: u16) void {
     dest[0] = @truncate(value >> 8);
@@ -215,36 +179,6 @@ test readI64BE {
 test readI64LE {
     const data = [_]u8{ 0xfe, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
     try std.testing.expectEqual(-2, readI64LE(&data));
-}
-
-test readF16BE {
-    const data = [_]u8{ 0x3c, 0x00 };
-    try std.testing.expectEqual(1, readF16BE(&data));
-}
-
-test readF16LE {
-    const data = [_]u8{ 0x00, 0x3c };
-    try std.testing.expectEqual(1, readF16LE(&data));
-}
-
-test readF32BE {
-    const data = [_]u8{ 0x42, 0xAA, 0x40, 0x00 };
-    try std.testing.expectEqual(85.125, readF32BE(&data));
-}
-
-test readF32LE {
-    const data = [_]u8{ 0x00, 0x40, 0xAA, 0x42 };
-    try std.testing.expectEqual(85.125, readF32LE(&data));
-}
-
-test readF64BE {
-    const data = [_]u8{ 0x40, 0x55, 0x48, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    try std.testing.expectEqual(85.125, readF64BE(&data));
-}
-
-test readF64LE {
-    const data = [_]u8{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x48, 0x55, 0x40 };
-    try std.testing.expectEqual(85.125, readF64LE(&data));
 }
 
 test writeU16BE {

@@ -1,4 +1,4 @@
-const binary_number_primitives = @import("binary_number_primitives.zig");
+const integer_primitives = @import("primitives/integers.zig");
 const std = @import("std");
 
 /// A sequential writer of primitives to binary data.
@@ -43,19 +43,19 @@ pub fn writeBool(self: *BinaryPrimitiveWriter, value: bool) void {
 
 /// Writes an unsigned 16-bit integer in big endian form.
 pub fn writeU16BE(self: *BinaryPrimitiveWriter, value: u16) void {
-    binary_number_primitives.writeU16BE(self.buffer[self.offset..], value);
+    integer_primitives.writeU16BE(self.buffer[self.offset..], value);
     self.offset += 2;
 }
 
 /// Writes an unsigned 24-bit integer in big endian form.
 pub fn writeU24BE(self: *BinaryPrimitiveWriter, value: u24) void {
-    binary_number_primitives.writeU24BE(self.buffer[self.offset..], value);
+    integer_primitives.writeU24BE(self.buffer[self.offset..], value);
     self.offset += 3;
 }
 
 /// Writes an unsigned 32-bit integer in big endian form.
 pub fn writeU32BE(self: *BinaryPrimitiveWriter, value: u32) void {
-    binary_number_primitives.writeU32BE(self.buffer[self.offset..], value);
+    integer_primitives.writeU32BE(self.buffer[self.offset..], value);
     self.offset += 4;
 }
 
