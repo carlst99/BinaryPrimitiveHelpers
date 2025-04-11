@@ -59,4 +59,60 @@ pub fn build(b: *std.Build) void {
     // running the unit tests.
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_lib_unit_tests.step);
+
+    addBenchmarks(b, target, optimize, lib_mod);
+}
+
+fn addBenchmarks(
+    b: *std.Build,
+    target: std.Build.ResolvedTarget,
+    optimize: std.builtin.OptimizeMode,
+    lib_mod: *std.Build.Module,
+) void {
+    const opts = .{ .target = target, .optimize = optimize };
+    const zbench_module = b.dependency("zbench", opts).module("zbench");
+
+    // We will also create a module for the benchmark entry point
+    const bench_mod = b.createModule(.{
+        .root_source_file = b.path("src/benchmarks.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    bench_mod.addImport("binary_primitive_helpers", lib_mod);
+    bench_mod.addImport("zbench", zbench_module);
+
+    // This creates another `std.Build.Step.Compile`, but this one builds an executable
+    // rather than a static library.
+    const bench_exe = b.addExecutable(.{
+        .name = "benchmarks",
+        .root_module = bench_mod,
+    });
+
+    // This declares intent for the executable to be installed into the
+    // standard location when the user invokes the "install" step (the default
+    // step when running `zig build`).
+    b.installArtifact(bench_exe);
+
+    // This *creates* a Run step in the build graph, to be executed when another
+    // step is evaluated that depends on it. The next line below will establish
+    // such a dependency.
+    const run_cmd = b.addRunArtifact(bench_exe);
+
+    // By making the run step depend on the install step, it will be run from the
+    // installation directory rather than directly from within the cache directory.
+    // This is not necessary, however, if the application depends on other installed
+    // files, this ensures they will be present and in the expected location.
+    run_cmd.step.dependOn(b.getInstallStep());
+
+    // This allows the user to pass arguments to the application in the build
+    // command itself, like this: `zig build run -- arg1 arg2 etc`
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
+
+    // This creates a build step. It will be visible in the `zig build --help` menu,
+    // and can be selected like this: `zig build run`
+    // This will evaluate the `run` step rather than the default, which is "install".
+    const run_step = b.step("bench", "Run the benchmarks");
+    run_step.dependOn(&run_cmd.step);
 }
