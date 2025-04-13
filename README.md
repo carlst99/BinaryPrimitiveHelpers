@@ -9,3 +9,7 @@ data (e.g. numbers and strings) from a byte array.
 
 For my own convenience, I've consolidated these utilities into this repository, in both a Zig and .NET library.
 It's important to note that any functions which read or write binary data should perform bounds-checks.
+
+See further details in the README for each language:
+- [Zig](./src-zig/README.md)
+- [.NET](./src-cs/README.md)
