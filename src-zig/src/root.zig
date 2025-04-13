@@ -1,6 +1,7 @@
 pub const BinaryPrimitiveReader = @import("BinaryPrimitiveReader.zig");
 pub const BinaryPrimitiveWriter = @import("BinaryPrimitiveWriter.zig");
 pub const number_primitives = @import("primitives/numbers.zig");
+pub const string_primitives = @import("primitives/strings.zig");
 
 pub const BphError = error{
     /// The provided buffer was too small to read/write the requested data type.

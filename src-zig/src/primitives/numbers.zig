@@ -1,7 +1,7 @@
+const std = @import("std");
 const BphError = @import("../root.zig").BphError;
 const Endian = std.builtin.Endian;
 const native_endian = @import("builtin").cpu.arch.endian();
-const std = @import("std");
 
 /// Reads an integer from the `source` buffer. The length of the `source` buffer must be at least as
 /// long as the number of bytes of the integer type (i.e. bit count / 8).

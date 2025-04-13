@@ -192,8 +192,8 @@ test readStringNullTerminated {
     );
 
     // We should error out on data that doesn't have a null-terminator
-    const data2 = [_]u8{ 'A', 'B' };
-    var reader2 = BinaryPrimitiveReader.init(&data2);
+    const data2 = "ab";
+    var reader2 = BinaryPrimitiveReader.init(data2);
     try std.testing.expectError(
         BphError.StringNotTerminated,
         reader2.readStringNullTerminated(),
