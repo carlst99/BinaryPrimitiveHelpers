@@ -16,7 +16,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
-        <PackageReference Include="TUnit" Version="0.19.64" />
+        <PackageReference Include="TUnit" Version="0.19.82" />
     </ItemGroup>
 
     <ItemGroup>
