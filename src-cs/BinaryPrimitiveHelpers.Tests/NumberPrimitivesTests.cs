@@ -43,6 +43,8 @@ public class NumberPrimitivesTests
         await Assert.That(NumberPrimitives.ReadNumber<int>(data, 3, Endian.Big)).IsEqualTo(-2);
         Array.Reverse(data);
         await Assert.That(NumberPrimitives.ReadNumber<int>(data, 3, Endian.Little)).IsEqualTo(-2);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => NumberPrimitives.ReadNumber<ushort>(data, 3, Endian.Big));
     }
 
     [Test]
