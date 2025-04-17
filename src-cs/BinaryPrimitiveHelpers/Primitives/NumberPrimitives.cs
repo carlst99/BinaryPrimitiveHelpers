@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace BinaryPrimitiveHelpers.Primitives;
 
+/// <summary>
+/// Helper methods for reading and writing number primitives from binary buffers.
+/// </summary>
 public static class NumberPrimitives
 {
     private static readonly Endian NativeEndian = BitConverter.IsLittleEndian ? Endian.Little : Endian.Big;
@@ -145,7 +148,7 @@ public static class NumberPrimitives
         if (sizeof(T) > target.Length)
             return false;
 
-        WriteNumber<T>(target, value, endian);
+        WriteNumber(target, value, endian);
         return true;
     }
 }

@@ -5,6 +5,10 @@ using System.Text;
 
 namespace BinaryPrimitiveHelpers;
 
+/// <summary>
+/// A binary reader implementation aimed towards allocation-free reads of primitive types from a
+/// <see cref="ReadOnlySpan{T}"/> of bytes.
+/// </summary>
 public ref struct BinaryReader
 {
     /// <summary>
