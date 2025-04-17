@@ -32,13 +32,13 @@
         },
     },
     .paths = .{
+        "../LICENSE",
         "build.zig",
         "build.zig.zon",
         "README.md",
         "src/BinaryPrimitiveReader.zig",
         "src/BinaryPrimitiveWriter.zig",
-        "src/primitives/numbers.zig",
-        "src/primitives/strings.zig",
+        "src/primitives",
         "src/root.zig",
     },
 }

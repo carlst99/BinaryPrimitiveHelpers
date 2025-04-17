@@ -2,17 +2,23 @@
 
 ## Installation
 
-Use `zig fetch` on the command line to retrieve BinaryPrimitivHelpers as a dependency.
+Add BinaryPrimitiveHelpers as a submodule:
 
 ```sh
-zig fetch https://github.com/carlst99/BinaryPrimitiveHelpers/archive/<COMMIT>.tar.gz --save
+mkdir libs
+git submodule add https://github.com/carlst99/BinaryPrimitiveHelpers libs/BinaryPrimitiveHelpers
 ```
 
-Now, add the module in `build.zig`, and import it against your own modules:
+And in `build.zig`, import it against your own modules:
 
 ```zig
-const opts = .{ .target = target, .optimize = optimize };
-const bin_prim_helpers = b.dependency("binary_primitive_helpers", opts).module("binary_primitive_helpers");
+my_module.addAnonymousImport("binary_primitive_helpers", .{
+    .root_source_file = b.path("libs/BinaryPrimitiveHelpers/src-zig/src/root.zig"),
+});
+```
 
-exe.root_module.addImport("binary_primitive_helpers", bin_prim_helpers);
+And import it in your code using the following:
+
+```zig
+const binary_primitive_helpers = @import("binary_primitive_helpers");
 ```
