@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
@@ -18,6 +19,9 @@ public static class NumberPrimitives
     /// <param name="source">The buffer in which the number is contained.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <returns>A number value.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static T ReadNumber<T>(ReadOnlySpan<byte> source, Endian endian)
         where T : struct, INumber<T>
     {
@@ -35,6 +39,9 @@ public static class NumberPrimitives
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static unsafe bool TryReadNumber<T>(ReadOnlySpan<byte> source, Endian endian, out T value)
         where T : unmanaged, INumber<T>
     {
@@ -60,6 +67,9 @@ public static class NumberPrimitives
     /// Thrown if <typeparamref name="TContainer"/> is not large enough to store the number of
     /// <paramref name="bytesToRead"/>.
     /// </exception>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static unsafe TContainer ReadNumber<TContainer>(ReadOnlySpan<byte> source, byte bytesToRead, Endian endian)
         where TContainer : unmanaged, INumber<TContainer>, IShiftOperators<TContainer, int, TContainer>
     {
@@ -101,6 +111,9 @@ public static class NumberPrimitives
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static bool TryReadNumber<TContainer>
     (
         ReadOnlySpan<byte> source,
@@ -126,6 +139,9 @@ public static class NumberPrimitives
     /// <param name="target">The buffer to write the number value into.</param>
     /// <param name="value">The value to write.</param>
     /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static unsafe void WriteNumber<T>(Span<byte> target, in T value, Endian endian)
         where T : unmanaged, INumber<T>
     {
@@ -142,6 +158,9 @@ public static class NumberPrimitives
     /// <param name="value">The value to write.</param>
     /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
     /// <returns><c>True</c> if the value was successfully written, else <c>false</c>.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
+    /// </remarks>
     public static unsafe bool TryWriteNumber<T>(Span<byte> target, in T value, Endian endian)
         where T : unmanaged, INumber<T>
     {

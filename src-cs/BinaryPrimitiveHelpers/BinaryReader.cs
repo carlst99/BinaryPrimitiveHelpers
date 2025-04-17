@@ -150,6 +150,9 @@ public ref struct BinaryReader
     /// <typeparam name="T">The type of number to read.</typeparam>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <returns>A number value.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the per-type/endian number reading methods.
+    /// </remarks>
     public unsafe T ReadNumber<T>(Endian endian)
         where T : unmanaged, INumber<T>
     {
@@ -165,6 +168,9 @@ public ref struct BinaryReader
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the per-type/endian number reading methods.
+    /// </remarks>
     public unsafe bool TryReadNumber<T>(Endian endian, out T value)
         where T : unmanaged, INumber<T>
     {
@@ -182,6 +188,9 @@ public ref struct BinaryReader
     /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <returns>A number value.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the per-type/endian number reading methods.
+    /// </remarks>
     public T ReadNumber<T>(byte bytesToRead, Endian endian)
         where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
     {
@@ -199,6 +208,9 @@ public ref struct BinaryReader
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    /// <remarks>
+    /// This generic method is less performant than the per-type/endian number reading methods.
+    /// </remarks>
     public bool TryReadNumber<T>(byte bytesToRead, Endian endian, out T value)
         where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
     {
