@@ -30,6 +30,22 @@ public class NumberPrimitivesTests
     }
 
     [Test]
+    public async Task TestReadNumber_WithByteLength()
+    {
+        // Unsigned
+        byte[] data = [ 0x00, 0x00, 0x01 ];
+        await Assert.That(NumberPrimitives.ReadNumber<uint>(data, 3, Endian.Big)).IsEqualTo((uint)1);
+        Array.Reverse(data);
+        await Assert.That(NumberPrimitives.ReadNumber<uint>(data, 3, Endian.Little)).IsEqualTo((uint)1);
+
+        // Signed
+        data = [ 0xff, 0xff, 0xfe ];
+        await Assert.That(NumberPrimitives.ReadNumber<int>(data, 3, Endian.Big)).IsEqualTo(-2);
+        Array.Reverse(data);
+        await Assert.That(NumberPrimitives.ReadNumber<int>(data, 3, Endian.Little)).IsEqualTo(-2);
+    }
+
+    [Test]
     public async Task TestWriteNumber_Integers()
     {
         byte[] expected = [ 0x00, 0x01 ];

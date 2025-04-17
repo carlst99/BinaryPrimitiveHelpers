@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryPrimitiveHelpers", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryPrimitiveHelpers.Tests", "BinaryPrimitiveHelpers.Tests\BinaryPrimitiveHelpers.Tests.csproj", "{30FF9537-F3AE-4493-8485-E87F88253E1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BinaryPrimitiveHelpers.Benchmarks", "BinaryPrimitiveHelpers.Benchmarks\BinaryPrimitiveHelpers.Benchmarks.csproj", "{714A3064-8262-4A9A-A93D-993225523683}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{30FF9537-F3AE-4493-8485-E87F88253E1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30FF9537-F3AE-4493-8485-E87F88253E1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30FF9537-F3AE-4493-8485-E87F88253E1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714A3064-8262-4A9A-A93D-993225523683}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714A3064-8262-4A9A-A93D-993225523683}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714A3064-8262-4A9A-A93D-993225523683}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714A3064-8262-4A9A-A93D-993225523683}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
