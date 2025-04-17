@@ -34,7 +34,7 @@ pub fn getRemaining(self: BinaryPrimitiveWriter) []u8 {
 }
 
 pub fn writeBytes(self: *BinaryPrimitiveWriter, value: []const u8) BphError!void {
-    if (self.offset + value.len - 1 >= self.buffer.len) return BphError.EndOfStream;
+    if (self.offset + value.len > self.buffer.len) return BphError.EndOfStream;
     @memcpy(self.buffer[self.offset .. self.offset + value.len], value);
     self.offset += value.len;
 }

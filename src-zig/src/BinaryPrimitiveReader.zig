@@ -34,7 +34,7 @@ pub fn getRemaining(self: BinaryPrimitiveReader) []const u8 {
 }
 
 pub fn readBytes(self: *BinaryPrimitiveReader, len: usize) BphError![]const u8 {
-    if (self.offset + len - 1 >= self.buffer.len) return BphError.EndOfStream;
+    if (self.offset + len > self.buffer.len) return BphError.EndOfStream;
     const value = self.buffer[self.offset .. self.offset + len];
     self.offset += len;
     return value;
