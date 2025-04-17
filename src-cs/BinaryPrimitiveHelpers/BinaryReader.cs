@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using BinaryPrimitiveHelpers.Primitives;
 
 namespace BinaryPrimitiveHelpers;
 
@@ -140,6 +142,70 @@ public ref struct BinaryReader
 
         value = ReadBool();
         return true;
+    }
+
+    /// <summary>
+    /// Reads an <see cref="INumber{T}"/> from the underlying buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <param name="endian">The endianness of the number in its binary representation.</param>
+    /// <returns>A number value.</returns>
+    public unsafe T ReadNumber<T>(Endian endian)
+        where T : unmanaged, INumber<T>
+    {
+        T value = NumberPrimitives.ReadNumber<T>(Buffer[Offset..], endian);
+        Offset += sizeof(T);
+        return value;
+    }
+
+    /// <summary>
+    /// Tries to read an <see cref="INumber{T}"/> from the underlying buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <param name="endian">The endianness of the number in its binary representation.</param>
+    /// <param name="value">The number value, if the read was successful.</param>
+    /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    public unsafe bool TryReadNumber<T>(Endian endian, out T value)
+        where T : unmanaged, INumber<T>
+    {
+        bool result = NumberPrimitives.TryReadNumber(Buffer[Offset..], endian, out value);
+        if (result)
+            Offset += sizeof(T);
+        return result;
+    }
+
+    /// <summary>
+    /// Reads an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
+    /// from the underlying buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
+    /// <param name="endian">The endianness of the number in its binary representation.</param>
+    /// <returns>A number value.</returns>
+    public T ReadNumber<T>(byte bytesToRead, Endian endian)
+        where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
+    {
+        T value = NumberPrimitives.ReadNumber<T>(Buffer[Offset..], bytesToRead, endian);
+        Offset += bytesToRead;
+        return value;
+    }
+
+    /// <summary>
+    /// Tries to read an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
+    /// from the underlying buffer.
+    /// </summary>
+    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
+    /// <param name="endian">The endianness of the number in its binary representation.</param>
+    /// <param name="value">The number value, if the read was successful.</param>
+    /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    public bool TryReadNumber<T>(byte bytesToRead, Endian endian, out T value)
+        where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
+    {
+        bool result = NumberPrimitives.TryReadNumber(Buffer[Offset..], bytesToRead, endian, out value);
+        if (result)
+            Offset += bytesToRead;
+        return result;
     }
 
     /// <summary>
