@@ -57,7 +57,7 @@ public class NumberPrimitivesTests
 
         NumberPrimitives.WriteNumber(data, (ushort)1, Endian.Big);
         await Assert.That(data).IsEqualTo(expected);
-        Array.Reverse(data);
+        Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, (ushort)1, Endian.Little);
         await Assert.That(data).IsEqualTo(expected);
 
@@ -67,8 +67,21 @@ public class NumberPrimitivesTests
 
         NumberPrimitives.WriteNumber(data, (short)-2, Endian.Big);
         await Assert.That(data).IsEqualTo(expected);
-        Array.Reverse(data);
-        NumberPrimitives.WriteNumber(data, (short)-2, Endian.Big);
+        Array.Reverse(expected);
+        NumberPrimitives.WriteNumber(data, (short)-2, Endian.Little);
+        await Assert.That(data).IsEqualTo(expected);
+    }
+
+    [Test]
+    public async Task TestWriteNumber_Floats()
+    {
+        byte[] expected = [ 0x3c, 0x00 ];
+        byte[] data = new byte[2];
+
+        NumberPrimitives.WriteNumber(data, (Half)1, Endian.Big);
+        await Assert.That(data).IsEqualTo(expected);
+        Array.Reverse(expected);
+        NumberPrimitives.WriteNumber(data, (Half)1, Endian.Little);
         await Assert.That(data).IsEqualTo(expected);
     }
 }
