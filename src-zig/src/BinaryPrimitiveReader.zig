@@ -48,15 +48,27 @@ pub fn readU8(self: *BinaryPrimitiveReader) BphError!u8 {
 
 /// Reads an integer value.
 pub fn readInt(self: *BinaryPrimitiveReader, comptime T: type, endian: Endian) BphError!T {
+    comptime {
+        if (@typeInfo(T) != .int) {
+            @panic("T is not an integer type");
+        }
+    }
+
     const value = number_prims.readInt(T, self.buffer[self.offset..], endian) catch return BphError.EndOfStream;
-    self.offset += @divExact(@typeInfo(T).int.bits, 8);
+    self.offset += comptime @divExact(@typeInfo(T).int.bits, 8);
     return value;
 }
 
 /// Reads a floating-point value.
 pub fn readFloat(self: *BinaryPrimitiveReader, comptime T: type, endian: Endian) BphError!T {
+    comptime {
+        if (@typeInfo(T) != .float) {
+            @panic("T is not a floating-point type");
+        }
+    }
+
     const value = number_prims.readFloat(T, self.buffer[self.offset..], endian) catch return BphError.EndOfStream;
-    self.offset += @divExact(@typeInfo(T).float.bits, 8);
+    self.offset += comptime @divExact(@typeInfo(T).float.bits, 8);
     return value;
 }
 
@@ -143,11 +155,12 @@ test readU8 {
 }
 
 test readInt {
-    const data = [_]u8{ 0x00, 0x01, 0xfe, 0xff };
+    const data = [_]u8{ 0x00, 0x01, 0xfe, 0xff, 0x00, 0x00, 0x00, 0x01 };
     var reader = BinaryPrimitiveReader.init(&data);
 
     try std.testing.expectEqual(1, reader.readInt(u16, .big));
     try std.testing.expectEqual(-2, reader.readInt(i16, .little));
+    try std.testing.expectEqual(1, reader.readInt(i32, .big));
 
     try std.testing.expectError(
         BphError.EndOfStream,

@@ -1,5 +1,6 @@
 const std = @import("std");
 const Endian = std.builtin.Endian;
+const number_prims = @import("primitives/numbers.zig");
 const zbench = @import("zbench");
 
 pub inline fn readInt(comptime T: type, source: []const u8, endian: Endian) T {
@@ -32,6 +33,13 @@ fn benchReadIntStd(allocator: std.mem.Allocator) void {
     _ = std.mem.readInt(u16, &data, .big);
 }
 
+fn benchNumberPrims(allocator: std.mem.Allocator) void {
+    _ = allocator;
+
+    const data = [_]u8{ 0x00, 0x01 };
+    _ = number_prims.readInt(u16, &data, .big) catch @panic("buffer too small");
+}
+
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
     var bench = zbench.Benchmark.init(std.heap.page_allocator, .{});
@@ -40,6 +48,7 @@ pub fn main() !void {
     try bench.add("benchReadInt", benchReadInt, .{});
     try bench.add("benchReadIntStd", benchReadIntStd, .{});
     try bench.add("benchReadIntWithBoundsCheck", benchReadIntWithBoundsCheck, .{});
+    try bench.add("benchNumberPrims", benchNumberPrims, .{});
 
     try stdout.writeAll("\n");
     try bench.run(stdout);

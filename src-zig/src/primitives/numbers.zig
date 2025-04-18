@@ -6,7 +6,13 @@ const native_endian = @import("builtin").cpu.arch.endian();
 /// Reads an integer from the `source` buffer. The length of the `source` buffer must be at least as
 /// long as the number of bytes of the integer type (i.e. bit count / 8).
 pub fn readInt(comptime T: type, source: []const u8, endian: Endian) BphError!T {
-    const type_size = @divExact(@typeInfo(T).int.bits, 8);
+    comptime {
+        if (@typeInfo(T) != .int) {
+            @panic("T is not an integer type");
+        }
+    }
+
+    const type_size: comptime_int = @divExact(@typeInfo(T).int.bits, 8);
     if (type_size > source.len) return BphError.EndOfStream;
     return std.mem.readInt(T, source[0..type_size], endian);
 }
@@ -14,6 +20,12 @@ pub fn readInt(comptime T: type, source: []const u8, endian: Endian) BphError!T 
 /// Reads a floating-point value from the `source` buffer. The length of the `source` buffer
 /// must be at least as long as the number of bytes of the float type (i.e. bit count / 8).
 pub fn readFloat(comptime T: type, source: []const u8, endian: Endian) BphError!T {
+    comptime {
+        if (@typeInfo(T) != .float) {
+            @panic("T is not a floating-point type");
+        }
+    }
+
     const int_type: type = @Type(.{
         .int = .{
             .bits = @typeInfo(T).float.bits,
@@ -27,7 +39,7 @@ pub fn readFloat(comptime T: type, source: []const u8, endian: Endian) BphError!
 /// Writes an integer to the `target` buffer. The length of the `target` buffer must be at
 /// least as long as the number of bytes of the integer type (i.e. bit count / 8).
 pub fn writeInt(comptime T: type, target: []u8, value: T, endian: Endian) BphError!void {
-    const type_size = @divExact(@typeInfo(T).int.bits, 8);
+    const type_size: comptime_int = @divExact(@typeInfo(T).int.bits, 8);
     if (type_size > target.len) return BphError.EndOfStream;
     std.mem.writeInt(T, target[0..type_size], value, endian);
 }
