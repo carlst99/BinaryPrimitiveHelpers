@@ -55,7 +55,10 @@ public static class NumberPrimitives
     /// Tries to read an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
     /// from the <paramref name="source"/> buffer.
     /// </summary>
-    /// <typeparam name="TContainer">The type of number in which to store the read value.</typeparam>
+    /// <typeparam name="TContainer">
+    /// The type of number in which to store the read value. This type must be large enough to store the number of
+    /// <paramref name="bytesToRead"/>.
+    /// </typeparam>
     /// <param name="source">The buffer in which the number is contained.</param>
     /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
@@ -64,9 +67,6 @@ public static class NumberPrimitives
     /// Thrown if <typeparamref name="TContainer"/> is not large enough to store the number of
     /// <paramref name="bytesToRead"/>.
     /// </exception>
-    /// <remarks>
-    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
-    /// </remarks>
     public static unsafe TContainer ReadNumber<TContainer>(ReadOnlySpan<byte> source, byte bytesToRead, Endian endian)
         where TContainer : unmanaged, INumber<TContainer>, IShiftOperators<TContainer, int, TContainer>
     {
@@ -102,15 +102,15 @@ public static class NumberPrimitives
     /// Tries to read an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
     /// from the <paramref name="source"/> buffer.
     /// </summary>
-    /// <typeparam name="TContainer">The type of number in which to store the read value.</typeparam>
+    /// <typeparam name="TContainer">
+    /// The type of number in which to store the read value. This type must be large enough to store the number of
+    /// <paramref name="bytesToRead"/>.
+    /// </typeparam>
     /// <param name="source">The buffer in which the number is contained.</param>
     /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
-    /// <remarks>
-    /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
-    /// </remarks>
     public static unsafe bool TryReadNumber<TContainer>
     (
         ReadOnlySpan<byte> source,

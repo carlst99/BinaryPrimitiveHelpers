@@ -186,13 +186,13 @@ public ref partial struct BinaryReader
     /// Reads an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
     /// from the underlying buffer.
     /// </summary>
-    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <typeparam name="T">
+    /// The type of number in which to store the read value. This type must be large enough to store the number of
+    /// <paramref name="bytesToRead"/>.
+    /// </typeparam>
     /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <returns>A number value.</returns>
-    /// <remarks>
-    /// This generic method is less performant than the per-type/endian number reading methods.
-    /// </remarks>
     public T ReadNumber<T>(byte bytesToRead, Endian endian)
         where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
     {
@@ -205,14 +205,14 @@ public ref partial struct BinaryReader
     /// Tries to read an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes
     /// from the underlying buffer.
     /// </summary>
-    /// <typeparam name="T">The type of number to read.</typeparam>
+    /// <typeparam name="T">
+    /// The type of number in which to store the read value. This type must be large enough to store the number of
+    /// <paramref name="bytesToRead"/>.
+    /// </typeparam>
     /// <param name="bytesToRead">The number of bytes in which the number value is stored.</param>
     /// <param name="endian">The endianness of the number in its binary representation.</param>
     /// <param name="value">The number value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
-    /// <remarks>
-    /// This generic method is less performant than the per-type/endian number reading methods.
-    /// </remarks>
     public bool TryReadNumber<T>(byte bytesToRead, Endian endian, out T value)
         where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
     {
