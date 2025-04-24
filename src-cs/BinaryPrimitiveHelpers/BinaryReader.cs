@@ -41,6 +41,16 @@ public ref partial struct BinaryReader
     public ReadOnlySpan<byte> Remaining => Buffer[Offset..];
 
     /// <summary>
+    /// Indicates whether the reader has reached the end of the <see cref="Buffer"/>.
+    /// </summary>
+    public readonly bool IsAtEnd => Offset >= Buffer.Length;
+
+    /// <summary>
+    /// The remaining number of bytes that can be read from the <see cref="Buffer"/>.
+    /// </summary>
+    public readonly int RemainingLength => Buffer.Length - Offset;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BinaryReader"/> struct.
     /// </summary>
     /// <param name="buffer">The underlying span of data to read from.</param>

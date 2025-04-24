@@ -40,6 +40,16 @@ public ref partial struct BinaryWriter
     public Span<byte> Remaining => Buffer[Offset..];
 
     /// <summary>
+    /// Indicates whether the writer has reached the end of the <see cref="Buffer"/>.
+    /// </summary>
+    public readonly bool IsAtEnd => Offset >= Buffer.Length;
+
+    /// <summary>
+    /// The remaining number of bytes that can be written to the <see cref="Buffer"/>.
+    /// </summary>
+    public readonly int RemainingLength => Buffer.Length - Offset;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BinaryWriter"/> struct.
     /// </summary>
     /// <param name="buffer">The underlying span of data to write to.</param>
