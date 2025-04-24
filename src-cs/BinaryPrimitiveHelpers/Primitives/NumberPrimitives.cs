@@ -152,6 +152,48 @@ public static class NumberPrimitives
     }
 
     /// <summary>
+    /// Writes an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes to the
+    /// <paramref name="target"/> buffer.
+    /// </summary>
+    /// <typeparam name="TContainer">
+    /// The type of number in which the value is stored. This type must be large enough to store the number of
+    /// <paramref name="bytesToWrite"/>.
+    /// </typeparam>
+    /// <param name="target">The buffer to write the number value into.</param>
+    /// <param name="value">The value to write.</param>
+    /// <param name="bytesToWrite">The number of bytes in which to store the written value.</param>
+    /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
+    public static unsafe void WriteNumber<TContainer>(Span<byte> target, TContainer value, byte bytesToWrite, Endian endian)
+        where TContainer : unmanaged, INumber<TContainer>, IShiftOperators<TContainer, int, TContainer>
+    {
+        // Check that the container type can hold the specified number of bytes to write
+        if (bytesToWrite > sizeof(TContainer))
+        {
+            throw new ArgumentOutOfRangeException
+            (
+                nameof(bytesToWrite),
+                bytesToWrite,
+                $"The type {typeof(TContainer).Name} is too small to store the specified number of bytes"
+            );
+        }
+
+        Span<byte> container = stackalloc byte[sizeof(TContainer)];
+
+        // Shift the low-order number bytes towards the same end as the sign bit, to remove any padding between it
+        // and the value while ensuring the number fits into the target byte count.
+        if (BitConverter.IsLittleEndian)
+            value <<= (container.Length - bytesToWrite) * 8;
+        else
+            value >>= (container.Length - bytesToWrite) * 8;
+
+        WriteNumber(container, value, endian);
+
+        // Depending on our endianness, the shifted written value might not start at the beginning of the container
+        int start = endian is Endian.Big ? 0 : container.Length - bytesToWrite;
+        container.Slice(start, bytesToWrite).CopyTo(target);
+    }
+
+    /// <summary>
     /// Tries to write an <see cref="INumber{T}"/> to the <paramref name="target"/> buffer.
     /// </summary>
     /// <typeparam name="T">The type of the number to write.</typeparam>
@@ -169,5 +211,32 @@ public static class NumberPrimitives
         if (endian != NativeEndian && result)
             target[..sizeof(T)].Reverse();
         return result;
+    }
+
+    /// <summary>
+    /// Tries to write an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes to the
+    /// <paramref name="target"/> buffer.
+    /// </summary>
+    /// <typeparam name="TContainer">
+    /// The type of number in which the value is stored. This type must be large enough to store the number of
+    /// <paramref name="bytesToWrite"/>.
+    /// </typeparam>
+    /// <param name="target">The buffer to write the number value into.</param>
+    /// <param name="value">The value to write.</param>
+    /// <param name="bytesToWrite">The number of bytes in which to store the written value.</param>
+    /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
+    /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    public static unsafe bool TryWriteNumber<TContainer>(Span<byte> target, TContainer value, byte bytesToWrite, Endian endian)
+        where TContainer : unmanaged, INumber<TContainer>, IShiftOperators<TContainer, int, TContainer>
+    {
+        if (bytesToWrite > target.Length)
+            return false;
+
+        // Check that the container type can hold the specified number of bytes to read
+        if (bytesToWrite > sizeof(TContainer))
+            return false;
+
+        WriteNumber(target, value, bytesToWrite, endian);
+        return true;
     }
 }
