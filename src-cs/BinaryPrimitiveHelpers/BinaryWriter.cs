@@ -130,7 +130,7 @@ public ref partial struct BinaryWriter
     /// <exception cref="Exception">Thrown if the read value was not a valid boolean.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void WriteBool(bool value)
-        => Buffer[Offset++] = (byte)(value ? 1 : 0);
+        => WriteByte((byte)(value ? 1 : 0));
 
     /// <summary>
     /// Tries to write a boolean to the underlying buffer.
@@ -138,13 +138,7 @@ public ref partial struct BinaryWriter
     /// <param name="value">The value to write.</param>
     /// <returns><c>True</c> if the value was successfully written, else <c>false</c>.</returns>
     public bool TryWriteBool(bool value)
-    {
-        if (Offset >= Buffer.Length || Buffer[Offset] > 1)
-            return false;
-
-        WriteBool(value);
-        return true;
-    }
+        => TryWriteByte((byte)(value ? 1 : 0));
 
     /// <summary>
     /// Writes an <see cref="INumber{T}"/> to the underlying buffer.

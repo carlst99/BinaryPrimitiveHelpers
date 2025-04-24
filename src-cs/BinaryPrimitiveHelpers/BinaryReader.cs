@@ -135,6 +135,7 @@ public ref partial struct BinaryReader
     /// </summary>
     /// <returns>A boolean value</returns>
     /// <exception cref="Exception">Thrown if the read value was not a valid boolean.</exception>
+    /// <remarks>This method does not treat values greater than one as truthy.</remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ReadBool()
         => ReadByte() switch
@@ -149,15 +150,18 @@ public ref partial struct BinaryReader
     /// </summary>
     /// <param name="value">The value, if the read was successful.</param>
     /// <returns><c>True</c> if the value was successfully read, else <c>false</c>.</returns>
+    /// <remarks>This method does not treat values greater than one as truthy.</remarks>
     public bool TryReadBool(out bool value)
     {
-        value = false;
+        bool result = TryReadByte(out byte byteVal);
 
-        if (Offset >= Buffer.Length || Buffer[Offset] > 1)
-            return false;
+        value = byteVal switch
+        {
+            0 => false,
+            _ => true
+        };
 
-        value = ReadBool();
-        return true;
+        return byteVal <= 1 && result;
     }
 
     /// <summary>
