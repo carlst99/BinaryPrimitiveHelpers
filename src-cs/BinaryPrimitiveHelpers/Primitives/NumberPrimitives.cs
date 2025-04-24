@@ -42,16 +42,13 @@ public static class NumberPrimitives
     /// <remarks>
     /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
     /// </remarks>
-    public static unsafe bool TryReadNumber<T>(ReadOnlySpan<byte> source, Endian endian, out T value)
+    public static bool TryReadNumber<T>(ReadOnlySpan<byte> source, Endian endian, out T value)
         where T : unmanaged, INumber<T>
     {
-        value = default;
-
-        if (sizeof(T) > source.Length)
-            return false;
-
-        value = ReadNumber<T>(source, endian);
-        return true;
+        bool result = MemoryMarshal.TryRead(source, out value);
+        if (endian != NativeEndian && result)
+            MemoryMarshal.AsBytes(MemoryMarshal.CreateSpan(ref value, 1)).Reverse();
+        return result;
     }
 
     /// <summary>
@@ -142,10 +139,10 @@ public static class NumberPrimitives
     /// <remarks>
     /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
     /// </remarks>
-    public static unsafe void WriteNumber<T>(Span<byte> target, in T value, Endian endian)
+    public static unsafe void WriteNumber<T>(Span<byte> target, T value, Endian endian)
         where T : unmanaged, INumber<T>
     {
-        MemoryMarshal.Write(target, value);
+        MemoryMarshal.Write(target, in value);
         if (endian != NativeEndian)
             target[..sizeof(T)].Reverse();
     }
@@ -161,13 +158,12 @@ public static class NumberPrimitives
     /// <remarks>
     /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
     /// </remarks>
-    public static unsafe bool TryWriteNumber<T>(Span<byte> target, in T value, Endian endian)
+    public static unsafe bool TryWriteNumber<T>(Span<byte> target, T value, Endian endian)
         where T : unmanaged, INumber<T>
     {
-        if (sizeof(T) > target.Length)
-            return false;
-
-        WriteNumber(target, value, endian);
-        return true;
+        bool result = MemoryMarshal.TryWrite(target, in value);
+        if (endian != NativeEndian && result)
+            target[..sizeof(T)].Reverse();
+        return result;
     }
 }
