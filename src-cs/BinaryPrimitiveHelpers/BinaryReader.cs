@@ -18,7 +18,7 @@ public ref partial struct BinaryReader
     /// <summary>
     /// The underlying span of data.
     /// </summary>
-    public required ReadOnlySpan<byte> Buffer;
+    public ReadOnlySpan<byte> Buffer;
 
     /// <summary>
     /// The offset into the <see cref="Buffer"/> that the reader is at.

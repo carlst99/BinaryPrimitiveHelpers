@@ -17,7 +17,7 @@ public ref partial struct BinaryWriter
     /// <summary>
     /// The underlying span of data.
     /// </summary>
-    public required Span<byte> Buffer;
+    public Span<byte> Buffer;
 
     /// <summary>
     /// The offset into the <see cref="Buffer"/> that the writer is at.
