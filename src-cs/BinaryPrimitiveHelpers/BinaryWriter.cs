@@ -149,6 +149,23 @@ public ref partial struct BinaryWriter
     }
 
     /// <summary>
+    /// Writes an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes to the underlying buffer.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The type of number in which the value is stored. This type must be large enough to store the number of
+    /// <paramref name="bytesToWrite"/>.
+    /// </typeparam>
+    /// <param name="value">The value to write.</param>
+    /// <param name="bytesToWrite">The number of bytes in which to store the written value.</param>
+    /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
+    public unsafe void WriteNumber<T>(T value, byte bytesToWrite, Endian endian)
+        where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
+    {
+        NumberPrimitives.WriteNumber(Buffer[Offset..], value, bytesToWrite, endian);
+        Offset += sizeof(T);
+    }
+
+    /// <summary>
     /// Tries to write an <see cref="INumber{T}"/> to the underlying buffer.
     /// </summary>
     /// <typeparam name="T">The type of the number to write.</typeparam>
@@ -162,6 +179,27 @@ public ref partial struct BinaryWriter
         where T : unmanaged, INumber<T>
     {
         bool result = NumberPrimitives.TryWriteNumber(Buffer[Offset..], value, endian);
+        if (result)
+            Offset += sizeof(T);
+        return result;
+    }
+
+    /// <summary>
+    /// Tries to write an <see cref="INumber{T}"/> that is stored using a non-standard number of bytes to the underlying
+    /// buffer.
+    /// </summary>
+    /// <typeparam name="T">
+    /// The type of number in which the value is stored. This type must be large enough to store the number of
+    /// <paramref name="bytesToWrite"/>.
+    /// </typeparam>
+    /// <param name="value">The value to write.</param>
+    /// <param name="bytesToWrite">The number of bytes in which to store the written value.</param>
+    /// <param name="endian">The endianness in which to encode the number's binary representation.</param>
+    /// <returns><c>True</c> if the value was successfully written, else <c>false</c>.</returns>
+    public unsafe bool TryWriteNumber<T>(T value, byte bytesToWrite, Endian endian)
+        where T : unmanaged, INumber<T>, IShiftOperators<T, int, T>
+    {
+        bool result = NumberPrimitives.TryWriteNumber(Buffer[Offset..], value, bytesToWrite, endian);
         if (result)
             Offset += sizeof(T);
         return result;
