@@ -130,7 +130,7 @@ public class NumberPrimitivesTests
         await Assert.That(result).IsFalse();
 
         data = [0xff];
-        result = NumberPrimitives.TryReadNumber(data, Endian.Big, out ushort _);
+        result = NumberPrimitives.TryReadNumber(data, 3, Endian.Big, out ushort _);
         await Assert.That(result).IsFalse();
     }
 
