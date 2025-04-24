@@ -19,7 +19,7 @@ pub fn init(slice: []const u8) BinaryPrimitiveReader {
 
 /// Advances the offset of the reader by the given amount.
 pub inline fn advance(self: *BinaryPrimitiveReader, amount: usize) BphError!void {
-    if (self.offset + amount >= self.buffer.len) return BphError.EndOfStream;
+    if (self.offset + amount > self.buffer.len) return BphError.EndOfStream;
     self.offset += amount;
 }
 

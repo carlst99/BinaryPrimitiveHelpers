@@ -19,7 +19,7 @@ pub fn init(slice: []u8) BinaryPrimitiveWriter {
 
 /// Advances the offset of the writer by the given amount.
 pub inline fn advance(self: *BinaryPrimitiveWriter, amount: usize) BphError!void {
-    if (self.offset + amount >= self.buffer.len) return BphError.EndOfStream;
+    if (self.offset + amount > self.buffer.len) return BphError.EndOfStream;
     self.offset += amount;
 }
 
