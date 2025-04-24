@@ -11,6 +11,7 @@
 
     <!-- NuGet-related properties -->
     <PropertyGroup>
+        <PackageId>carlst99.BinaryPrimitiveHelpers</PackageId>
         <Description>A utility library for reading and writing primitive data in binary representation.</Description>
         <Authors>Carl Stephens</Authors>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
