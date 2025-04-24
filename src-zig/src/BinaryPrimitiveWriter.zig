@@ -33,6 +33,11 @@ pub fn getRemaining(self: BinaryPrimitiveWriter) []u8 {
     return self.buffer[self.offset..];
 }
 
+/// Gets the remaining number of bytes that can be read from the underlying data.
+pub fn getRemainingLen(self: BinaryPrimitiveWriter) usize {
+    return self.buffer.len - self.offset;
+}
+
 pub fn writeBytes(self: *BinaryPrimitiveWriter, value: []const u8) BphError!void {
     if (self.offset + value.len > self.buffer.len) return BphError.EndOfStream;
     @memcpy(self.buffer[self.offset .. self.offset + value.len], value);
@@ -78,8 +83,8 @@ test advance {
 
     try reader.advance(2);
     try std.testing.expectEqual(2, reader.offset);
-    try reader.advance(1);
-    try std.testing.expectEqual(3, reader.offset);
+    try reader.advance(2);
+    try std.testing.expectEqual(4, reader.offset);
 
     try std.testing.expectError(BphError.EndOfStream, reader.advance(1));
 }
@@ -98,6 +103,14 @@ test getRemaining {
     try reader.advance(2);
 
     try std.testing.expectEqual(data[2..4], reader.getRemaining());
+}
+
+test getRemainingLen {
+    var data = [_]u8{ 0x1, 0xFF, 0xAA, 0xBB };
+    var reader = BinaryPrimitiveWriter.init(&data);
+    try reader.advance(2);
+
+    try std.testing.expectEqual(2, reader.getRemainingLen());
 }
 
 test writeBytes {
