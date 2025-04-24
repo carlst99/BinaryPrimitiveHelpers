@@ -111,7 +111,7 @@ public static class NumberPrimitives
     /// <remarks>
     /// This generic method is less performant than the dedicated methods on <see cref="BinaryPrimitives"/>.
     /// </remarks>
-    public static bool TryReadNumber<TContainer>
+    public static unsafe bool TryReadNumber<TContainer>
     (
         ReadOnlySpan<byte> source,
         byte bytesToRead,
@@ -123,6 +123,10 @@ public static class NumberPrimitives
         value = default;
 
         if (bytesToRead > source.Length)
+            return false;
+
+        // Check that the container type can hold the specified number of bytes to read
+        if (bytesToRead > sizeof(TContainer))
             return false;
 
         value = ReadNumber<TContainer>(source, bytesToRead, endian);
