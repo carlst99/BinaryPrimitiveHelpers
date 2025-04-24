@@ -58,7 +58,7 @@ public ref partial struct BinaryReader
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Seek(int amount)
     {
-        if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
+        if (Offset + amount < 0 || Offset + amount > Buffer.Length)
             throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot advance past the end of the buffer");
         Offset += amount;
     }
@@ -70,7 +70,7 @@ public ref partial struct BinaryReader
     /// <returns><c>True</c> if the seek was within the bounds of the underlying buffer, else <c>false</c>.</returns>
     public bool TrySeek(int amount)
     {
-        if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
+        if (Offset + amount < 0 || Offset + amount > Buffer.Length)
             return false;
 
         Offset += amount;
@@ -123,7 +123,7 @@ public ref partial struct BinaryReader
     {
         value = 0;
 
-        if (Offset + 1 >= Buffer.Length)
+        if (Offset >= Buffer.Length)
             return false;
 
         value = ReadByte();
@@ -153,7 +153,7 @@ public ref partial struct BinaryReader
     {
         value = false;
 
-        if (Offset + 1 >= Buffer.Length || Buffer[Offset] > 1)
+        if (Offset >= Buffer.Length || Buffer[Offset] > 1)
             return false;
 
         value = ReadBool();

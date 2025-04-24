@@ -57,7 +57,7 @@ public ref partial struct BinaryWriter
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Seek(int amount)
     {
-        if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
+        if (Offset + amount < 0 || Offset + amount > Buffer.Length)
             throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot advance past the end of the buffer");
         Offset += amount;
     }
@@ -69,7 +69,7 @@ public ref partial struct BinaryWriter
     /// <returns><c>True</c> if the seek was within the bounds of the underlying buffer, else <c>false</c>.</returns>
     public bool TrySeek(int amount)
     {
-        if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
+        if (Offset + amount < 0 || Offset + amount > Buffer.Length)
             return false;
 
         Offset += amount;
@@ -116,7 +116,7 @@ public ref partial struct BinaryWriter
     /// <returns><c>True</c> if the value was successfully written, else <c>false</c>.</returns>
     public bool TryWriteByte(byte value)
     {
-        if (Offset + 1 >= Buffer.Length)
+        if (Offset >= Buffer.Length)
             return false;
 
         WriteByte(value);
@@ -139,7 +139,7 @@ public ref partial struct BinaryWriter
     /// <returns><c>True</c> if the value was successfully written, else <c>false</c>.</returns>
     public bool TryWriteBool(bool value)
     {
-        if (Offset + 1 >= Buffer.Length || Buffer[Offset] > 1)
+        if (Offset >= Buffer.Length || Buffer[Offset] > 1)
             return false;
 
         WriteBool(value);
