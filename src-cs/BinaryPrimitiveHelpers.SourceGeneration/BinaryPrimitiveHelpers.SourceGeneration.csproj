@@ -6,6 +6,7 @@
         <LangVersion>Latest</LangVersion>
         <!-- No need for consuming projects to reference our DLL directly -->
         <IncludeBuildOutput>false</IncludeBuildOutput>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     </PropertyGroup>
 
     <!-- NuGet-related release properties -->

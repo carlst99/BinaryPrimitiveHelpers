@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BinaryPrimitiveHelpers.Primitives;
+using BinaryPrimitiveHelpers.SourceGeneration;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
-using BinaryPrimitiveHelpers.Primitives;
 
 namespace BinaryPrimitiveHelpers;
 
@@ -11,7 +12,8 @@ namespace BinaryPrimitiveHelpers;
 /// A binary reader implementation aimed towards allocation-free reads of primitive types from a
 /// <see cref="ReadOnlySpan{T}"/> of bytes.
 /// </summary>
-public ref struct BinaryReader
+[ExtendWithBinaryPrimitiveShims]
+public ref partial struct BinaryReader
 {
     /// <summary>
     /// The underlying span of data.
