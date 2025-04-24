@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>true</IsAotCompatible>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <Version>0.0.3</Version>
+        <Version>0.1.0</Version>
     </PropertyGroup>
 
     <!-- NuGet-related properties -->
