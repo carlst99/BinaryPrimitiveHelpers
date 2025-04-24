@@ -52,7 +52,7 @@ public ref partial struct BinaryReader
     }
 
     /// <summary>
-    /// Changes the <see cref="Offset"/> of the reader by the given amount.
+    /// Changes the <see cref="Offset"/> of the reader by the given <paramref name="amount"/>.
     /// </summary>
     /// <param name="amount">The amount to increment/decrement the offset by.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -61,6 +61,20 @@ public ref partial struct BinaryReader
         if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
             throw new ArgumentOutOfRangeException(nameof(amount), amount, "Cannot advance past the end of the buffer");
         Offset += amount;
+    }
+
+    /// <summary>
+    /// Tries to change the <see cref="Offset"/> of the reader by the given <paramref name="amount"/>.
+    /// </summary>
+    /// <param name="amount">The amount to increment/decrement the offset by.</param>
+    /// <returns><c>True</c> if the seek was within the bounds of the underlying buffer, else <c>false</c>.</returns>
+    public bool TrySeek(int amount)
+    {
+        if (Offset + amount < 0 || Offset + amount >= Buffer.Length)
+            return false;
+
+        Offset += amount;
+        return true;
     }
 
     /// <summary>
