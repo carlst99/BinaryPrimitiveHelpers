@@ -12,7 +12,7 @@ namespace BinaryPrimitiveHelpers;
 /// <see cref="Span{T}"/> of bytes.
 /// </summary>
 [ExtendWithBinaryPrimitiveShims]
-public ref partial struct BinaryWriter
+public ref partial struct BinaryPrimitiveWriter
 {
     /// <summary>
     /// The underlying span of data.
@@ -50,11 +50,11 @@ public ref partial struct BinaryWriter
     public readonly int RemainingLength => Buffer.Length - Offset;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BinaryWriter"/> struct.
+    /// Initializes a new instance of the <see cref="BinaryPrimitiveWriter"/> struct.
     /// </summary>
     /// <param name="buffer">The underlying span of data to write to.</param>
     /// <param name="defaultEncoding">The default encoding to use when writing string values.</param>
-    public BinaryWriter(Span<byte> buffer, Encoding? defaultEncoding = null)
+    public BinaryPrimitiveWriter(Span<byte> buffer, Encoding? defaultEncoding = null)
     {
         Buffer = buffer;
         DefaultEncoding = defaultEncoding ?? Encoding.UTF8;

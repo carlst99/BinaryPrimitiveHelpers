@@ -13,7 +13,7 @@ namespace BinaryPrimitiveHelpers;
 /// <see cref="ReadOnlySpan{T}"/> of bytes.
 /// </summary>
 [ExtendWithBinaryPrimitiveShims]
-public ref partial struct BinaryReader
+public ref partial struct BinaryPrimitiveReader
 {
     /// <summary>
     /// The underlying span of data.
@@ -51,11 +51,11 @@ public ref partial struct BinaryReader
     public readonly int RemainingLength => Buffer.Length - Offset;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BinaryReader"/> struct.
+    /// Initializes a new instance of the <see cref="BinaryPrimitiveReader"/> struct.
     /// </summary>
     /// <param name="buffer">The underlying span of data to read from.</param>
     /// <param name="defaultEncoding">The default encoding to use when reading string values.</param>
-    public BinaryReader(ReadOnlySpan<byte> buffer, Encoding? defaultEncoding = null)
+    public BinaryPrimitiveReader(ReadOnlySpan<byte> buffer, Encoding? defaultEncoding = null)
     {
         Buffer = buffer;
         DefaultEncoding = defaultEncoding ?? Encoding.UTF8;
