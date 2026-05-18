@@ -112,6 +112,38 @@ public ref partial struct BinaryPrimitiveWriter
     }
 
     /// <summary>
+    /// Gets a span of bytes that can be written to and advances the writer's offset.
+    /// </summary>
+    /// <param name="length">The length of the span to retrieve.</param>
+    /// <returns>A writable span of bytes from the underlying buffer.</returns>
+    public Span<byte> GetWritableSpan(int length)
+    {
+        Span<byte> buffer = Buffer.Slice(Offset, length);
+        Offset += length;
+        return buffer;
+    }
+
+    /// <summary>
+    /// Tries to get a span of bytes that can be written to. If successful, the writer's offset will be advanced.
+    /// </summary>
+    /// <param name="length">The length of the span to retrieve.</param>
+    /// <param name="buffer">A writable span of bytes from the underlying buffer.</param>
+    /// <returns>
+    /// Whether there was enough remaining length in the underlying buffer to retrieve a span of the given
+    /// <paramref name="length"/>.
+    /// </returns>
+    public bool TryGetWritableSpan(int length, out Span<byte> buffer)
+    {
+        buffer = default;
+
+        if (Offset + length >= Buffer.Length)
+            return false;
+
+        buffer = GetWritableSpan(length);
+        return true;
+    }
+
+    /// <summary>
     /// Writes a byte
     /// </summary>
     /// <param name="value">The value to write.</param>
