@@ -150,20 +150,20 @@ public class NumberPrimitivesTests
         // Unsigned
 
         NumberPrimitives.WriteNumber(data, (ushort)1, Endian.Big);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, (ushort)1, Endian.Little);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Signed
 
         expected = [ 0xff, 0xfe ];
 
         NumberPrimitives.WriteNumber(data, (short)-2, Endian.Big);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, (short)-2, Endian.Little);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
     }
 
     [Test]
@@ -173,10 +173,10 @@ public class NumberPrimitivesTests
         byte[] data = new byte[2];
 
         NumberPrimitives.WriteNumber(data, (Half)1, Endian.Big);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, (Half)1, Endian.Little);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
     }
 
     [Test]
@@ -188,20 +188,20 @@ public class NumberPrimitivesTests
         // Unsigned
 
         NumberPrimitives.WriteNumber(data, 1, 3, Endian.Big);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, 1, 3, Endian.Little);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Signed
 
         expected = [ 0xff, 0xff, 0xfe ];
 
         NumberPrimitives.WriteNumber(data, -2, 3, Endian.Big);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         NumberPrimitives.WriteNumber(data, -2, 3, Endian.Little);
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Fails when container is too small
         Assert.Throws<ArgumentOutOfRangeException>(() => NumberPrimitives.WriteNumber(data, (ushort)1, 3, Endian.Big));
@@ -228,20 +228,20 @@ public class NumberPrimitivesTests
         // Unsigned
 
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (ushort)1, Endian.Big)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (ushort)1, Endian.Little)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Signed
 
         expected = [ 0xff, 0xfe ];
 
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (short)-2, Endian.Big)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (short)-2, Endian.Little)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
     }
 
     [Test]
@@ -251,10 +251,10 @@ public class NumberPrimitivesTests
         byte[] data = new byte[2];
 
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (Half)1, Endian.Big)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (Half)1, Endian.Little)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
     }
 
     [Test]
@@ -266,20 +266,20 @@ public class NumberPrimitivesTests
         // Unsigned
 
         await Assert.That(NumberPrimitives.TryWriteNumber(data, 1, 3, Endian.Big)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         await Assert.That(NumberPrimitives.TryWriteNumber(data, 1, 3, Endian.Little)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Signed
 
         expected = [ 0xff, 0xff, 0xfe ];
 
         await Assert.That(NumberPrimitives.TryWriteNumber(data, -2, 3, Endian.Big)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
         Array.Reverse(expected);
         await Assert.That(NumberPrimitives.TryWriteNumber(data, -2, 3, Endian.Little)).IsTrue();
-        await Assert.That(data).IsEqualTo(expected);
+        await Assert.That(data).IsEquivalentTo(expected);
 
         // Fails when container is too small
         await Assert.That(NumberPrimitives.TryWriteNumber(data, (ushort)1, 3, Endian.Big)).IsFalse();
