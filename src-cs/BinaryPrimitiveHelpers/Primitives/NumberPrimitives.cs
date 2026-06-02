@@ -12,6 +12,8 @@ public static class NumberPrimitives
 {
     private static readonly Endian NativeEndian = BitConverter.IsLittleEndian ? Endian.Little : Endian.Big;
 
+#if NET8_0_OR_GREATER
+
     /// <summary>
     /// Reads an <see cref="INumber{T}"/> from the <paramref name="source"/> buffer.
     /// </summary>
@@ -239,4 +241,7 @@ public static class NumberPrimitives
         WriteNumber(target, value, bytesToWrite, endian);
         return true;
     }
+
+#endif
+
 }

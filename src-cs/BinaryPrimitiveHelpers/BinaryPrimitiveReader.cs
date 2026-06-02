@@ -23,12 +23,12 @@ public ref partial struct BinaryPrimitiveReader
     /// <summary>
     /// The offset into the <see cref="Buffer"/> that the reader is at.
     /// </summary>
-    public int Offset = 0;
+    public int Offset;
 
     /// <summary>
     /// The default encoding to use when reading string values.
     /// </summary>
-    public Encoding DefaultEncoding = Encoding.UTF8;
+    public Encoding DefaultEncoding;
 
     /// <summary>
     /// Gets a span over the <see cref="Buffer"/> that has been consumed.
@@ -58,6 +58,7 @@ public ref partial struct BinaryPrimitiveReader
     public BinaryPrimitiveReader(ReadOnlySpan<byte> buffer, Encoding? defaultEncoding = null)
     {
         Buffer = buffer;
+        Offset = 0;
         DefaultEncoding = defaultEncoding ?? Encoding.UTF8;
     }
 
@@ -174,6 +175,8 @@ public ref partial struct BinaryPrimitiveReader
         return byteVal <= 1 && result;
     }
 
+#if NET8_0_OR_GREATER
+
     /// <summary>
     /// Reads an <see cref="INumber{T}"/> from the underlying buffer.
     /// </summary>
@@ -249,6 +252,8 @@ public ref partial struct BinaryPrimitiveReader
             Offset += bytesToRead;
         return result;
     }
+
+#endif
 
     /// <summary>
     /// Reads a null-terminated string from the underlying buffer.

@@ -22,12 +22,12 @@ public ref partial struct BinaryPrimitiveWriter
     /// <summary>
     /// The offset into the <see cref="Buffer"/> that the writer is at.
     /// </summary>
-    public int Offset = 0;
+    public int Offset;
 
     /// <summary>
     /// The default encoding to use when writing string values.
     /// </summary>
-    public Encoding DefaultEncoding = Encoding.UTF8;
+    public Encoding DefaultEncoding;
 
     /// <summary>
     /// Gets a span over the <see cref="Buffer"/> that has been consumed.
@@ -57,6 +57,7 @@ public ref partial struct BinaryPrimitiveWriter
     public BinaryPrimitiveWriter(Span<byte> buffer, Encoding? defaultEncoding = null)
     {
         Buffer = buffer;
+        Offset = 0;
         DefaultEncoding = defaultEncoding ?? Encoding.UTF8;
     }
 
@@ -182,6 +183,8 @@ public ref partial struct BinaryPrimitiveWriter
     public bool TryWriteBool(bool value)
         => TryWriteByte((byte)(value ? 1 : 0));
 
+#if NET8_0_OR_GREATER
+
     /// <summary>
     /// Writes an <see cref="INumber{T}"/> to the underlying buffer.
     /// </summary>
@@ -254,6 +257,8 @@ public ref partial struct BinaryPrimitiveWriter
             Offset += sizeof(T);
         return result;
     }
+
+#endif
 
     /// <summary>
     /// Writes a string to the underlying buffer.
